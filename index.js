@@ -2,16 +2,36 @@ const express = require('express')
 const { graphqlHTTP } = require('express-graphql')
 const { buildSchema } = require('graphql')
 
+// 스키마
 const schema = buildSchema(`
+    type Product {
+        id : ID!
+        name : String
+        price : Int
+        description : String
+    }
+
     type Query {
-        hello : String,
-        lake : Int
+        getProduct( id : ID! ) : Product
+
     }
 `)
 
+// 데이터
+const products = [{
+    id : 1,
+    name : '첫번째 제품',
+    price : 2000,
+    description : '비고1'
+},{
+    id : 2,
+    name : '두번째 제품',
+    price : 4000,
+    description : '비고2'
+}]
+
 const root = {
-    hello : () => 'hello world',
-    lake : () => 35
+    getProduct : ({ id }) => products.find( product => product.id === parseInt(id))
 }
 
 const app = express()
